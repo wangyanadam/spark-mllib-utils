@@ -13,9 +13,9 @@ from pyspark.mllib.regression import LabeledPoint
 def __main__():
     
     # setting args
-    input = ""
+    input = ''
     batch_size = 10
-    output_rdd = ""
+    output_rdd = ''
     nparts = 1
     delims = ',|\t| '
     lcol = -1
@@ -40,7 +40,7 @@ def __main__():
             delims = str(arg_name_val[1])
         elif arg_name_val[0] == '-lcol':
             lcol = int(arg_name_val[1])
-        elif arg_name_val[0] == "-batch_size":
+        elif arg_name_val[0] == '-batch_size':
             batch_size = int(arg_name_val[1])
         elif arg_name_val[0] == '-real_cols':
             for idx_range in arg_name_val[1].split(','):
@@ -60,7 +60,7 @@ def __main__():
             null_value = str(arg_name_val[1])
         elif arg_name_val[0] == '-hash':
             hash = str(arg_name_val[1])
-            if hash not in {'none', 'hex8', 'bin32'}:
+            if hash not in {'one-hot', 'hex8', 'bin32'}:
                 print >> sys.stderr, 'Invalid option for hash!'
                 exit(-1)
         elif arg_name_val[0] == '-missing_value':
@@ -113,7 +113,7 @@ def __main__():
 
     cate_feat_stats = {key:None for key in cate_cols.value}
 
-    if hash == 'none':
+    if hash == 'one-hot':
         for i in cate_cols.value:
             cate_feat_stats[i] = data0.map(lambda fields: fields[i]) \
                                     .filter(lambda field: field != None) \
@@ -215,7 +215,7 @@ def __main__():
             return LabeledPoint(mapped_fields[lcol], mapped_fields[:lcol] + mapped_fields[lcol + 1:])
         else:
             return LabeledPoint(-1, mapped_fields)
-
+        
     data1.map(map_missing) \
         .saveAsPickleFile(output_rdd, batch_size)
             
